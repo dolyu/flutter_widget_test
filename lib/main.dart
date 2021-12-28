@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:widget_test/ctrl/chart_test_ctrl.dart';
 import 'package:widget_test/ctrl/file_view_ctrl.dart';
 import 'package:widget_test/model/file_view.dart';
+import 'package:widget_test/page/chart_test.dart';
 
 void main() {
   Get.put(FileViewCtrl());
+  Get.put(ChartTestCtrl());
   runApp(const MyApp());
 }
 
@@ -82,10 +85,12 @@ class _MyHomePageState extends State<MyHomePage> {
                       },
                     ),
                   )),
-            )
+            ),
+            const ChartTest(),
           ],
         ),
       ),
+
       floatingActionButton: Row(
         children: [
           FloatingActionButton(
