@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:widget_test/ctrl/chart_test_ctrl.dart';
 import 'package:widget_test/ctrl/file_view_ctrl.dart';
+import 'package:widget_test/ctrl/range_slider_ctrl.dart';
 import 'package:widget_test/model/file_view.dart';
 import 'package:widget_test/page/chart_test.dart';
+import 'package:widget_test/page/range_slider_test.dart';
 
 void main() {
   Get.put(FileViewCtrl());
   Get.put(ChartTestCtrl());
+  Get.put(RangeSliderCtrl());
+
   runApp(const MyApp());
 }
 
@@ -73,7 +77,7 @@ class _MyHomePageState extends State<MyHomePage> {
               'You have pushed the button this many times:',
             ),
             SizedBox(
-              height: 300,
+              height: 200,
               width: 300,
               child: Obx(() => Scrollbar(
                     isAlwaysShown: true,
@@ -87,6 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   )),
             ),
             const ChartTest(),
+            const RangeSliderTest(),
           ],
         ),
       ),
@@ -110,6 +115,15 @@ class _MyHomePageState extends State<MyHomePage> {
               },
               tooltip: 'Delete',
               child: const Icon(Icons.remove)),
+          FloatingActionButton(
+              onPressed: () {
+                RangeSliderCtrl.to.firstLine.clear();
+                for (var i = 0; i < 2048; i++) {
+                  RangeSliderCtrl.to.firstLine.add((180.02 + (i * 0.25)));
+                }
+              },
+              tooltip: 'add RangeSlider firstLine',
+              child: const Icon(Icons.ac_unit)),
         ],
       ),
       // This trailing comma makes auto-formatting nicer for build methods.
