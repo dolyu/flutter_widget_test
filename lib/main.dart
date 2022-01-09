@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:widget_test/ctrl/chart_test_ctrl.dart';
 import 'package:widget_test/ctrl/file_view_ctrl.dart';
 import 'package:widget_test/ctrl/range_slider_ctrl.dart';
+import 'package:widget_test/model/config_wr.dart';
 import 'package:widget_test/model/file_view.dart';
 import 'package:widget_test/page/chart_test.dart';
 import 'package:widget_test/page/range_slider_test.dart';
@@ -124,6 +128,28 @@ class _MyHomePageState extends State<MyHomePage> {
               },
               tooltip: 'add RangeSlider firstLine',
               child: const Icon(Icons.ac_unit)),
+          const SizedBox(width: 20),
+          ElevatedButton(
+              onPressed: () async {
+                ConfigWR writeConfig = ConfigWR.init();
+                writeConfig.viz.s[3].comPort = 22;
+                File file = File("./setting.json");
+                debugPrint('writeConfig ${writeConfig.toJson()}');
+                await file.writeAsString(writeConfig.toJson(),
+                    mode: FileMode.write);
+              },
+              child: const Text('write json')),
+          const SizedBox(width: 20),
+          ElevatedButton(
+              onPressed: () async {
+                File file = File("./setting.json");
+                String data = file.readAsStringSync();
+                ConfigWR loadConfig = ConfigWR.fromJson(data);
+                debugPrint('ConfigWR $loadConfig');
+                debugPrint(
+                    'ConfigWR Viz1 Comport ${loadConfig.viz.s[3].comPort}');
+              },
+              child: const Text('load json')),
         ],
       ),
       // This trailing comma makes auto-formatting nicer for build methods.
