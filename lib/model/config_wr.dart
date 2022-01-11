@@ -6,15 +6,18 @@ import 'package:flutter/material.dart';
 class ConfigWR {
   ConfigOES oes;
   ConfigVizCommon viz;
+  List<double> a;
   ConfigWR({
     required this.oes,
     required this.viz,
+    this.a = const [],
   });
 
   factory ConfigWR.init([String name = ""]) {
     return ConfigWR(
       oes: ConfigOES.init(),
       viz: ConfigVizCommon.init(),
+      a: List.filled(5, 0),
     );
   }
 

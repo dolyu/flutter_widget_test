@@ -150,6 +150,13 @@ class _MyHomePageState extends State<MyHomePage> {
                     'ConfigWR Viz1 Comport ${loadConfig.viz.s[3].comPort}');
               },
               child: const Text('load json')),
+          const SizedBox(width: 20),
+          ElevatedButton(
+              onPressed: () async {
+                List<double> a = List.filled(5, 0);
+                a[1] = 0.0;
+              },
+              child: const Text('load json')),
         ],
       ),
       // This trailing comma makes auto-formatting nicer for build methods.
