@@ -1,20 +1,23 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:widget_test/ctrl/chart_test_ctrl.dart';
+import 'package:widget_test/ctrl/common._ctrl.dart';
 import 'package:widget_test/ctrl/file_view_ctrl.dart';
 import 'package:widget_test/ctrl/range_slider_ctrl.dart';
+import 'package:widget_test/model/common.dart';
 import 'package:widget_test/model/config_wr.dart';
 import 'package:widget_test/model/file_view.dart';
 import 'package:widget_test/page/chart_test.dart';
+import 'package:widget_test/page/compute_page.dart';
 import 'package:widget_test/page/range_slider_test.dart';
 
 void main() {
   Get.put(FileViewCtrl());
   Get.put(ChartTestCtrl());
   Get.put(RangeSliderCtrl());
+  Get.put(CommonCtrl());
 
   runApp(const MyApp());
 }
@@ -25,12 +28,26 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'Flutter WGS Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'WGS Widget Test'),
+      initialRoute: '/',
+      //   home: const MyHomePage(title: 'WGS Widget Test'),
+      //routes: {"/"},
+      getPages: [
+        GetPage(
+            name: "/",
+            page: () => const MyHomePage(title: 'WGS Widget Test'),
+            transition: Transition.zoom),
+        GetPage(
+            name: "/computeTest",
+            page: () => const ComputeTest(),
+            binding: BindingsBuilder(() {
+              Get.put(CommonCtrl());
+            })),
+      ],
     );
   }
 }
@@ -77,11 +94,19 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
+            // Obx(() => Text(
+            //       CommonCtrl.to.sss.value,
+            //     )),
+            ElevatedButton(
+                onPressed: () async {
+                  //await compute(CommonCtrl.to.computeTest, 1);
+                  //CommonCtrl.to.computeTest(11);
+                  Get.to(const ComputeTest());
+                },
+                //child: Text(CommonCtrl.to.sss.value)),
+                child: const Text('compute Test Page')),
             SizedBox(
-              height: 200,
+              height: 100,
               width: 300,
               child: Obx(() => Scrollbar(
                     isAlwaysShown: true,
@@ -103,6 +128,7 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: Row(
         children: [
           FloatingActionButton(
+            heroTag: '1',
             onPressed: () {
               int i = FileViewCtrl.to.fvs.length;
               FileViewCtrl.to.fvs.add(FileView(
@@ -114,12 +140,14 @@ class _MyHomePageState extends State<MyHomePage> {
             child: const Icon(Icons.add),
           ),
           FloatingActionButton(
+              heroTag: '2',
               onPressed: () {
                 FileViewCtrl.to.fvs.removeLast();
               },
               tooltip: 'Delete',
               child: const Icon(Icons.remove)),
           FloatingActionButton(
+              heroTag: '3',
               onPressed: () {
                 RangeSliderCtrl.to.firstLine.clear();
                 for (var i = 0; i < 2048; i++) {
@@ -157,6 +185,25 @@ class _MyHomePageState extends State<MyHomePage> {
                 a[1] = 0.0;
               },
               child: const Text('load json')),
+          const SizedBox(width: 20),
+          ElevatedButton(
+              onPressed: () async {
+                for (var i = 0; i < 5; i++) {
+                  CommonCtrl.to.q.add(QQQQ(
+                      id: i.toString(),
+                      name: i.toString(),
+                      zzzz: i.toString()));
+                }
+                debugPrint('qqqq ${CommonCtrl.to.q}');
+                RxList<DBIdName> a = CommonCtrl.to.q
+                    .map((element) =>
+                        DBIdName(id: element.id, name: element.name))
+                    .toList()
+                    .obs;
+                debugPrint('a ${a[0].name}');
+              },
+              child: const Text('load DBIdName')),
+          const SizedBox(width: 20),
         ],
       ),
       // This trailing comma makes auto-formatting nicer for build methods.
