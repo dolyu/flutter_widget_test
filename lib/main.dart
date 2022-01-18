@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -204,6 +205,39 @@ class _MyHomePageState extends State<MyHomePage> {
               },
               child: const Text('load DBIdName')),
           const SizedBox(width: 20),
+          ElevatedButton(
+              onPressed: () async {
+                File file = File("./wef.csv");
+                List<dynamic> initData = [
+                  "FileFormat : 1",
+                  "Save 하하하 : ",
+                  "Wavelength : "
+                ];
+                List<List<double>> fileData = [];
+                for (var i = 0; i < 5; i++) {
+                  fileData.add([]);
+                  for (var ii = 0; ii < 100; ii++) {
+                    fileData[i].add(i * ii * 0.1);
+                  }
+                }
+
+                String all = initData.join('\n') +
+                    '\n' +
+                    "Time호호호" +
+                    '\n' +
+                    fileData.map((line) => line.join(",")).join('\n');
+                //String credentials = "username:password";
+                Codec<String, String> stringToBase64 = utf8.fuse(base64);
+                String encoded =
+                    stringToBase64.encode(all); // dXNlcm5hbWU6cGFzc3dvcmQ=
+                String decoded = stringToBase64.decode(encoded);
+                //Uint8List a = base64Decode(all);
+                debugPrint('wwef $encoded $decoded');
+                //await file.writeAsBytes(encoded);
+                await file.writeAsString(all, encoding: const SystemEncoding());
+                //await file.writeAsString('하하하', mode: FileMode.write, );
+              },
+              child: const Text('한글파일쓰기')),
         ],
       ),
       // This trailing comma makes auto-formatting nicer for build methods.
