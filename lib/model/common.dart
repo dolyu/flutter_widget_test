@@ -1,8 +1,5 @@
 import 'dart:convert';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-
 class QQQQ {
   String id;
   String name;
@@ -29,18 +26,6 @@ class DBIdName extends Object {
   String name;
 
   factory DBIdName.init() => DBIdName(id: "", name: "");
-
-  factory DBIdName.fromDocument(DocumentSnapshot doc) {
-    String name = "";
-
-    try {
-      name = doc.get("name");
-    } catch (e) {
-      debugPrint('e $e');
-    }
-
-    return DBIdName(id: doc.id, name: name);
-  }
 
   factory DBIdName.fromMap(Map<String, dynamic>? map) =>
       DBIdName(id: map?['id'] ?? "", name: map?['name'] ?? "");
