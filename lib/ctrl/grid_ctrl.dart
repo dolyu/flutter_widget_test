@@ -32,4 +32,9 @@ class GridCtrl extends GetxController {
     await Future.microtask(
         () => isLoading(false)); //delayed(const Duration(milliseconds: 10));
   }
+
+  modify(PlutoGridStateManager stateManager) async {
+    stateManager.currentCell!.value = '123';
+    debugPrint('변경');
+  }
 }

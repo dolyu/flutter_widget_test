@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 import 'package:widget_test/ctrl/grid_ctrl.dart';
-import 'package:get/get.dart';
+//import 'package:get/get.dart';
 
 // ignore: must_be_immutable
 class GridPage extends StatelessWidget {
@@ -48,6 +48,7 @@ class GridPage extends StatelessWidget {
         type: PlutoColumnType.text(),
       ),
     ];
+    late PlutoGridStateManager stateManager;
 
     return Scaffold(
       appBar: AppBar(title: const Text('grid Test')),
@@ -62,6 +63,7 @@ class GridPage extends StatelessWidget {
                       TextButton(
                           onPressed: () async {
                             await GridCtrl.to.add('111', '11111');
+                            stateManager.notifyListeners();
                             //await loadData();
                           },
                           child: const Text('추가')),
@@ -70,29 +72,30 @@ class GridPage extends StatelessWidget {
                             await GridCtrl.to.del();
                           },
                           child: const Text('삭제')),
+                      TextButton(
+                          onPressed: () async {
+                            await GridCtrl.to.modify(stateManager);
+                            //stateManager.notifyListeners();
+                          },
+                          child: const Text('수정')),
                     ],
                   ),
                   Expanded(
-                      child: Obx(
-                    () => LoadWidget(
-                      isLoading: GridCtrl.to.isLoading.value,
-                      isEmpty: GridCtrl.to.rows.isEmpty,
-                      child: PlutoGrid(
-                        columns: GridCtrl.to.columns,
-                        rows: GridCtrl.to.rows,
-                        // columnGroups: columnGroups,
-                        onLoaded: (PlutoGridOnLoadedEvent event) {
-                          // stateManager = event.stateManager;
-                        },
-                        onChanged: (PlutoGridOnChangedEvent event) {
-                          debugPrint('$event');
-                        },
-                        configuration: const PlutoGridConfiguration(
-                          enableColumnBorder: true,
-                        ),
+                    child: PlutoGrid(
+                      columns: GridCtrl.to.columns,
+                      rows: GridCtrl.to.rows,
+                      // columnGroups: columnGroups,
+                      onLoaded: (PlutoGridOnLoadedEvent event) {
+                        stateManager = event.stateManager;
+                      },
+                      onChanged: (PlutoGridOnChangedEvent event) {
+                        debugPrint('event $event');
+                      },
+                      configuration: const PlutoGridConfiguration(
+                        enableColumnBorder: true,
                       ),
                     ),
-                  )),
+                  ),
                 ],
               );
             } else {
