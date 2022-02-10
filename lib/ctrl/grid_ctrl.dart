@@ -34,7 +34,18 @@ class GridCtrl extends GetxController {
   }
 
   modify(PlutoGridStateManager stateManager) async {
-    stateManager.currentCell!.value = '123';
+    int row = stateManager.currentRowIdx!;
+    String column = stateManager.currentColumnField!;
+    stateManager.rows[row].cells[column]!.value = '123';
+    //stateManager.currentCell!.value = '123';
     debugPrint('변경');
+  }
+
+  modify2(PlutoGridStateManager stateManager, int row, String field,
+      String value) async {
+    stateManager.rows[row].cells[field]!.value = value;
+    //stateManager.currentCell!.value = '123';
+    debugPrint('변경');
+    stateManager.notifyListeners();
   }
 }

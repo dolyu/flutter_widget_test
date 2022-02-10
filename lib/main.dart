@@ -132,7 +132,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   onPressed: () async {
                     //await compute(CommonCtrl.to.computeTest, 1);
                     //CommonCtrl.to.computeTest(11);
-                    Get.to(const GridPage());
+                    Get.to(GridPage());
                   },
                   //child: Text(CommonCtrl.to.sss.value)),
                   child: const Text('grid Page')),

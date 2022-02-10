@@ -5,7 +5,8 @@ import 'package:widget_test/ctrl/grid_ctrl.dart';
 
 // ignore: must_be_immutable
 class GridPage extends StatelessWidget {
-  const GridPage({Key? key}) : super(key: key);
+  GridPage({Key? key}) : super(key: key);
+  late PlutoGridStateManager stateManager;
   Future<bool> loadData() async {
     await Future.delayed(const Duration(milliseconds: 500));
 
@@ -34,6 +35,13 @@ class GridPage extends StatelessWidget {
     return true;
   }
 
+  modify(int row, String field, String value) async {
+    stateManager.rows[row].cells[field]!.value = value;
+    //stateManager.currentCell!.value = '123';
+    debugPrint('변경');
+    stateManager.notifyListeners();
+  }
+
   @override
   Widget build(BuildContext context) {
     GridCtrl.to.columns.value = [
@@ -41,6 +49,9 @@ class GridPage extends StatelessWidget {
         title: 'Id',
         field: 'id',
         type: PlutoColumnType.text(),
+        enableEditingMode: false,
+        enableRowChecked: false,
+        enableRowDrag: true,
       ),
       PlutoColumn(
         title: 'Name',
@@ -48,7 +59,6 @@ class GridPage extends StatelessWidget {
         type: PlutoColumnType.text(),
       ),
     ];
-    late PlutoGridStateManager stateManager;
 
     return Scaffold(
       appBar: AppBar(title: const Text('grid Test')),
@@ -75,7 +85,7 @@ class GridPage extends StatelessWidget {
                       TextButton(
                           onPressed: () async {
                             await GridCtrl.to.modify(stateManager);
-                            //stateManager.notifyListeners();
+                            stateManager.notifyListeners();
                           },
                           child: const Text('수정')),
                     ],
@@ -84,16 +94,66 @@ class GridPage extends StatelessWidget {
                     child: PlutoGrid(
                       columns: GridCtrl.to.columns,
                       rows: GridCtrl.to.rows,
+                      mode: PlutoGridMode.selectWithOneTap,
+
                       // columnGroups: columnGroups,
                       onLoaded: (PlutoGridOnLoadedEvent event) {
+                        event.stateManager
+                            .setSelectingMode(PlutoGridSelectingMode.row);
+                        debugPrint(
+                            'selecting Mode ${event.stateManager.selectingMode}');
                         stateManager = event.stateManager;
                       },
                       onChanged: (PlutoGridOnChangedEvent event) {
                         debugPrint('event $event');
                       },
+
                       configuration: const PlutoGridConfiguration(
                         enableColumnBorder: true,
                       ),
+                      onSelected: (PlutoGridOnSelectedEvent event) {
+                        String value = '';
+                        if (event.cell == null) return;
+                        final row = event.cell!.row.sortIdx;
+                        if (row == null) return;
+                        String field = event.cell!.column.field;
+                        String selectedValue = event.cell!.value;
+
+                        debugPrint(
+                            'onselected $row  / $field / $selectedValue}');
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: const Text('식수인원'),
+                                content: TextField(
+                                  decoration: const InputDecoration(
+                                    labelText: 'Input',
+                                  ),
+                                  controller: TextEditingController(
+                                      text: selectedValue),
+                                  onChanged: (text) {
+                                    value = text;
+                                    debugPrint('text $text');
+                                  },
+                                ),
+                                actions: [
+                                  TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text('Cancel')),
+                                  TextButton(
+                                      onPressed: () {
+                                        modify(row, field, value);
+                                        stateManager.notifyListeners();
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text('OK')),
+                                ],
+                              );
+                            });
+                      },
                     ),
                   ),
                 ],

@@ -65,6 +65,41 @@ class ChartTest extends StatelessWidget {
                     .withOpacity(0.1),
               ]),
             ),
+            LineChartBarData(
+              spots: const [
+                FlSpot(0, 10),
+                FlSpot(1, 10),
+                FlSpot(2, 21),
+                FlSpot(3, 31.5),
+                FlSpot(4, 41),
+                FlSpot(5, 51.4),
+                FlSpot(6, 31),
+                FlSpot(7, 43.4),
+                FlSpot(8, 71),
+                FlSpot(9, 82),
+                FlSpot(10, 21),
+              ],
+              isCurved: false,
+              colors: [
+                ColorTween(begin: gradientColors[0], end: gradientColors[1])
+                    .lerp(0.2)!,
+                ColorTween(begin: gradientColors[0], end: gradientColors[1])
+                    .lerp(0.2)!,
+              ],
+              barWidth: 1,
+              isStrokeCapRound: false,
+              dotData: FlDotData(
+                show: false,
+              ),
+              belowBarData: BarAreaData(show: true, colors: [
+                ColorTween(begin: gradientColors[0], end: gradientColors[1])
+                    .lerp(0.2)!
+                    .withOpacity(0.1),
+                ColorTween(begin: gradientColors[0], end: gradientColors[1])
+                    .lerp(0.2)!
+                    .withOpacity(0.1),
+              ]),
+            ),
           ],
           rangeAnnotations: RangeAnnotations(
             verticalRangeAnnotations: ttt(),
